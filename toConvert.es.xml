@@ -1,0 +1,123 @@
+<rules max_depth="4000">
+  <rule name="entry" max_depth="1">
+    <call transforms="tx 10" rule="buildCity" />
+  </rule>  
+  <rule name="buildCity" max_depth="2">
+    <call transforms="" rule="buildRing"/>
+    <call transforms="ty 10" rule="buildCity"/>
+  </rule>
+  <rule name="buildRing" max_depth="1">
+    <call transforms="" rule="buildPlot"/>
+    <call transforms="" rule="blockBreak"/> 
+  </rule>
+  <rule name="buildPlot" max_depth="10">
+    <instance transforms="s 3 4 0.4" shape="box"/>
+    <call transforms="tx 3 ty 0.09 ry 1" rule="buildPlot"/>
+    <call transforms="" rule="blockBreak"/>
+    <call transforms="tx 3 ty 0.09 ry 1" rule="buildTree"/>
+    <call transforms="tz 2 s 3 4 1" rule="buildType1"/>
+  </rule>
+  <rule name="buildPlot" max_depth="1">
+    <instance transforms="s 2 3 0.4" shape="box"/>
+    <call transforms="tx 2 ty 0.01 ry 2" rule="buildPlot"/>
+    <call transforms="" rule="blockBreak"/>
+    <call transforms="" rule="buildTree"/>
+    <call transforms="tz 2 s 2 3 1" rule="buildType2"/>
+  </rule>
+  <rule name="buildPlot" max_depth="1">
+    <instance transforms="s 2 3 0.4" shape="box"/>
+    <call transforms="tz 10 tx 2 ry 1" rule="buildPlot"/>
+    <call transforms="" rule="blockBreak"/>
+    <call transforms="tz 2 s 2 3 1" rule="buildType2"/>
+  </rule>
+  <rule name="buildPlot" max_depth="1">
+    <instance transforms="s 2 3 0.4" shape="box"/>
+    <call transforms="tz -10 tx 2 ry 1" rule="buildPlot"/>
+    <call transforms="" rule="blockBreak"/>
+    <call transforms="tz 2 s 2 3 1" rule="buildType2"/>
+  </rule>
+  <rule name="buildPlot" max_depth="1">
+    <instance transforms="s 2 3 0.4" shape="box"/>
+    <call transforms="tx 2 ty -0.01 ry 1.2" rule="buildPlot"/>
+    <call transforms="" rule="blockBreak"/>
+    <call transforms="" rule="buildTree"/>
+    <call transforms="tz 2 s 2 3 1" rule="buildType3"/>
+  </rule>
+  <rule name="blockBreak" max_depth="1">
+    <call transforms="tx 2" rule="blockBreak"/>
+  </rule>
+  <rule name="blockBreak" max_depth="1">
+    <call transforms="tx 1000" rule="blockBreak"/>
+  </rule>
+  <rule name="blockBreak" max_depth="1">
+    <call transforms="tx 1000" rule="blockBreak"/>
+  </rule>
+  <rule name="buildType1" max_depth="4">
+    <instance transforms="s 1 1 2" shape="box"/>
+    <instance transforms="tz 2 s 1.2 1.2 1" shape="box"/>
+    <call transforms="tz 2" rule="buildType1"/>
+  </rule>
+  <rule name="buildType1" max_depth="2">
+    <instance transforms="s 1 1 2" shape="box"/>
+    <instance transforms="tz 2 s 0.3 1.1 1" shape="box"/>
+    <call transforms="tz 2" rule="buildType1"/>
+  </rule>
+  <rule name="buildType2" max_depth="2">
+    <instance transforms="s 1 1 2" shape="box"/>
+    <call transforms="tz 2" rule="buildType2"/>
+  </rule>
+  <rule name="buildType2" max_depth="2">
+    <instance transforms="s 1 1 2" shape="box"/>
+    <call transforms="tz 2" rule="buildType2"/>
+  </rule>
+  <rule name="buildType3" max_depth="5">
+    <instance transforms="s 1 1 2" shape="box"/>
+    <instance transforms="s 1 1 1" shape="box"/>
+    <call transforms="tz 2" rule="buildType3"/>
+  </rule>
+  <rule name="buildType3" max_depth="3">
+    <instance transforms="s 1 1 2" shape="box"/>
+    <instance transforms="s 1 1.4 1" shape="box"/>
+    <call transforms="tz 2" rule="buildType3"/>
+  </rule>
+  <rule name="buildType3" max_depth="3">
+    <instance transforms="s 1 1 2" shape="box"/>
+    <instance transforms="s 0.9 0.5 1.5" shape="box"/>
+    <call transforms="tz 2" rule="buildType3"/>
+  </rule>
+  <rule name="buildTree" max_depth="1">
+    <call transforms="ry 180 tx 3 sa 0.9" rule="R1"/>
+  </rule>
+  <rule name="buildTree" max_depth="1">
+    <call transforms="ry 180 ty 3 sa 0.7" rule="R1"/>
+  </rule>
+  <rule name="buildTree" max_depth="1">
+    <call transforms="ry 180 ty -3 sa 0.6" rule="R1"/>
+  </rule>
+  <rule name="buildTree" max_depth="1">
+    <call transforms="ry 180 tx -3 sa 0.5" rule="R1"/>
+  </rule>
+  <rule name="buildTree">
+    <call transforms="" rule=""/>
+  </rule>
+  <rule name="R1" max_depth="10" successor="endrule">
+    <instance transforms="tz 1 ry 9 sa 0.83 ty 0.01" rule="R1" shape="box"/>
+  </rule>
+  <rule name="R1" max_depth="1">
+    <instance transforms="tz 1 ry 6 sa 0.87" rule="R1" shape="box"/>
+    <call transforms="rz 90" rule="R1"/>
+  </rule>
+  <rule name="R1" max_depth="2" successor="endrule">
+    <instance transforms="tz 1 ry 6 sa 0.87" rule="R1" shape="box"/>
+    <call transforms="rz 90" rule="R1"/>
+  </rule>
+  <rule name="endrule" max_depth="1">
+    <instance transforms="sa 5" shape="box"/>
+  </rule>
+  <rule name="endrule" max_depth="1">
+    <instance transforms="sa 5" shape="sphere"/>
+  </rule>
+  <rule name="endrule" max_depth="1">
+    <instance transforms="sa 5" shape="sphere"/>
+  </rule>
+</rules>

@@ -1,6 +1,6 @@
 //compilation number 1
 //light and raytracer
-set raytracer::light [80,-90,100]
+set raytracer::light [80,-10,100]
 
 set raytracer::shadows true
 set raytracer::reflection 0.2
@@ -40,7 +40,7 @@ set raytracer::max-depth 10
 #define treeScale 1
 
 set maxdepth 80000
-set maxobjects 100000
+set maxobjects 50000
 {}buildCity
 
 rule buildCity maxdepth ringNum{
@@ -51,69 +51,59 @@ rule buildCity maxdepth ringNum{
 
 rule buildRing{
 	{}buildPlot
-	{}blockBreak
 }
 
-
-rule buildStreet maxdepth 400{
-	{ x classOnePlotX ry worldAngle} buildStreet //move first
-	{ s classOnePlotX streetWidthScale 0.2  color white} box //create box with no relation to prev instance
-	//{ y classOnePlotY }buildPlot
-	//{ y streetWidthScale}buildStreet
-}
 	
 //plot generators
 //---------------------------------------------------------------------------------------------------------------------
+/*
 rule buildPlot{
-	
-	{ x classOnePlotX y 0.09 ry worldAngle }buildPlot //recurses after moving in specified dir
-	{ }blockBreak 
-	{ color white s classOnePlotX  classOnePlotY 0.4 } box buildTree//builds white plot
-	{ z floorHeightTypeOne  s classOnePlotX classOnePlotY 1} buildType1  //builds building after scaling to plot size and height
+	{ x [x length of plot to move forward] y [distance to move on y axis, zig zag] x [distance between plots] ry [angle to curve] } buildPlot  //recurses after moving in specified dir
+	{ color [color of plot] s [scale to x size of plot] [scale to y size of plot] [thickness of plot] } box buildTree//builds white plot
+	{ z [move up from the base of the plot]  s [scale x] [scale z] [height of  floor already assigned in buildType fun]} buildType1  //builds building after scaling to plot size and height
+}
+*/
+
+//Build type 1
+rule buildPlot{
+	{ x classOnePlotX y 0.09 x 1 ry worldAngle } buildPlot
+	{ color white s classOnePlotX  classOnePlotY 0.4 } box buildTree
+	{ z floorHeightTypeOne  s classOnePlotX classOnePlotY 1} buildType1 
+rule buildPlot{
+	{ x classOnePlotX y 0.09 ry worldAngle } buildPlot  
+	{ color white s classOnePlotX  classOnePlotY 0.4 } box buildTree
+	{ z floorHeightTypeOne  s classOnePlotX classOnePlotY 1} buildType1
 }
 
+//Build type 2
 rule buildPlot{
-	{ x classTwoPlotX y 0.01 ry 2}buildPlot
-	{  }blockBreak
+	{ x classTwoPlotX y 0.01 x 0.5 ry 2} buildPlot 
 	{ color grey s classTwoPlotX  classTwoPlotY 0.4 } box buildTree
 	{ z floorHeightTypeTwo s classTwoPlotX classTwoPlotY 1} buildType2
 }                                                                                                                                                                                                                                                                                                                                             
-/*
 rule buildPlot{
-	{ z 10 x classTwoPlotX ry worldAngle}buildPlot
-	{  }blockBreak
-	{ color grey s classTwoPlotX  classTwoPlotY 0.4 } box
+	{ x classTwoPlotX y 0.01 x 0.2 ry 2} buildPlot 
+	{ color grey s classTwoPlotX  classTwoPlotY 0.4 } box buildTree
 	{ z floorHeightTypeTwo s classTwoPlotX classTwoPlotY 1} buildType2
-}      
+}        
 rule buildPlot{
-	{ z -10 x classTwoPlotX ry worldAngle}buildPlot
-	{  }blockBreak
-	{ color grey s classTwoPlotX  classTwoPlotY 0.4 } box
+	{ x classTwoPlotX y 0.01 ry 2} buildPlot 
+	{ color grey s classTwoPlotX  classTwoPlotY 0.4 } box buildTree
 	{ z floorHeightTypeTwo s classTwoPlotX classTwoPlotY 1} buildType2
-}  */ 
+}        
 
+
+//Build type 3
 rule buildPlot{
-	{ x classThreePlotX y -0.01 ry 1.2  }buildPlot
-	{ }blockBreak 
+	{ x classThreePlotX y -0.01 x 0.1 ry 1.2 } buildPlot 
 	{ color white s classThreePlotX  classThreePlotY 0.4 } box buildTree
 	{ z floorHeightTypeThree s classThreePlotX classThreePlotY 1} buildType3
-
-
-
 	}		
-
-//breaks between blocks
-//---------------------------------------------------------------------------------------------------------------------
-rule blockBreak md 1 {
-	{x streetWidthScale}blockBreak
-}
-rule blockBreak md 1 {
-	{ x 1000 }blockBreak
-}
-rule blockBreak md 1{
-}
-
-
+rule buildPlot{
+	{ x classThreePlotX y -0.01 ry 1.2 } buildPlot 
+	{ color white s classThreePlotX  classThreePlotY 0.4 } box buildTree
+	{ z floorHeightTypeThree s classThreePlotX classThreePlotY 1} buildType3
+	}		
 
 
 //buildtypes
@@ -124,29 +114,29 @@ rule blockBreak md 1{
 //build type 1
 //---------------------------------------------------------------------------------------------------------------------
 rule buildType1 maxdepth 4 weight 0.7{   
-	{z floorHeightTypeOne } buildType1 //recurse after moving
-	{color red alpha 0.7 s 1 1 floorHeightTypeOne} box //build floor
+	{ z floorHeightTypeOne } buildType1 //recurse after moving
+	{ color red alpha 0.7 s 1 1 floorHeightTypeOne} box //build floor
 	//facade
-	{z floorHeightTypeOne s 1.2 1.2 1 color white} box //build floor top
+	{ z floorHeightTypeOne s 1.2 1.2 1 color white} box //build floor top
 }
 
 rule buildType1 maxdepth 2{   
-	{z floorHeightTypeOne } buildType1 //recurse after moving
-	{color red alpha 0.7 s 1 1 floorHeightTypeOne} box //build floor
+	{ z floorHeightTypeOne } buildType1 //recurse after moving
+	{ color red alpha 0.7 s 1 1 floorHeightTypeOne} box //build floor
 	//facade
-	{z floorHeightTypeOne s 0.3 1.1 1 color white} box //build floor top
+	{ z floorHeightTypeOne s 0.3 1.1 1 color white} box //build floor top
 }
 
 //build type 2
 //Water Bodies
 //---------------------------------------------------------------------------------------------------------------------
 rule buildType2 maxdepth 2 weight 0.001{
-	{z floorHeightTypeTwo } buildType2
+	{ z floorHeightTypeTwo } buildType2
 	{ color blue alpha 0.4 s 1 1 floorHeightTypeTwo} box
 }
 
 rule buildType2 maxdepth 2 weight 0.001{
-	{z floorHeightTypeTwo } buildType2
+	{ z floorHeightTypeTwo } buildType2
 	{ blend blue 0.1  alpha 0.4 s 1 1 floorHeightTypeTwo} box
 }
 
@@ -154,7 +144,7 @@ rule buildType2 maxdepth 2 weight 0.001{
 //build type 3
 //---------------------------------------------------------------------------------------------------------------------
 rule buildType3 maxdepth 5 weight 0.5{
-	{z floorHeightTypeThree } buildType3
+	{ z floorHeightTypeThree } buildType3
 	{ color green alpha 0.4 s 1 1 floorHeightTypeThree } box
 	//facade
 		//windows 
@@ -162,7 +152,7 @@ rule buildType3 maxdepth 5 weight 0.5{
 }
 
 rule buildType3 maxdepth 3{
-	{z floorHeightTypeThree } buildType3
+	{ z floorHeightTypeThree } buildType3
 	{ color green alpha 0.7 s 1 1 floorHeightTypeThree } box
 	//facade
 		//windows 
@@ -170,7 +160,7 @@ rule buildType3 maxdepth 3{
 }
 
 rule buildType3 maxdepth 3{
-	{z floorHeightTypeThree } buildType3
+	{ z floorHeightTypeThree } buildType3
 	{ color green s 1 1 floorHeightTypeThree } box
 	//facade
 		//windows 
@@ -183,19 +173,19 @@ rule buildType3 maxdepth 3{
 
 
 rule buildTree md 1{
-	{ry 180 x 3 s 0.9  } R1
+	{ ry 180 x 3 s 0.9  } R1
 }
 
 rule buildTree md 1{
-	{ry 180 y 3 s 0.7 } R1
+	{ ry 180 y 3 s 0.7 } R1
 }
 
 rule buildTree md 1{
-	{ry 180 y -3 s 0.6 } R1
+	{ ry 180 y -3 s 0.6 } R1
 }
 
 rule buildTree {
-	{ry 180 x -3 s 0.5 } R1
+	{ ry 180 x -3 s 0.5 } R1
 }
 
 rule buildTree{
@@ -223,7 +213,7 @@ rule endrule {
 }
 
 rule endrule {
-	{ s 5 color green} sphere
+	{ s 5 color green alpha 0.6} sphere
 }
 
 rule endrule {
